@@ -1,0 +1,45 @@
+{
+    "coord": {
+        "lon": -82.8199,
+        "lat": 43.7424
+    },
+    "weather": [
+        {
+            "id": 803,
+            "main": "Clouds",
+            "description": "broken clouds",
+            "icon": "04d"
+        }
+    ],
+    "base": "stations",
+    "main": {
+        "temp": 292.69,
+        "feels_like": 292.84,
+        "temp_min": 292.09,
+        "temp_max": 293.84,
+        "pressure": 1013,
+        "humidity": 82,
+        "sea_level": 1013,
+        "grnd_level": 986
+    },
+    "visibility": 10000,
+    "wind": {
+        "speed": 3.09,
+        "deg": 130
+    },
+    "clouds": {
+        "all": 75
+    },
+    "dt": 1727015387,
+    "sys": {
+        "type": 1,
+        "id": 3390,
+        "country": "US",
+        "sunrise": 1727003941,
+        "sunset": 1727047720
+    },
+    "timezone": -14400,
+    "id": 4984692,
+    "name": "Cracow",
+    "cod": 200
+}
