@@ -1,36 +1,36 @@
-//
-//  WeatherDemoTests.swift
-//  WeatherDemoTests
-//
-//  Created by Juan Guerrero on 22/09/2024.
-//
-
 import XCTest
+import GSCXScanner
 @testable import WeatherDemo
 
 final class WeatherDemoTests: XCTestCase {
 
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        // 테스트 전 설정 작업
     }
 
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        // 테스트 후 정리 작업
     }
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
-    }
+    func testAccessibility() throws {
+        // GSCXScanner 인스턴스 생성
+        let scanner = GSCXScanner()
 
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+        // 접근성 검사 실행
+        let result = scanner.runAccessibilityCheck()
+
+        // 검사 결과 확인 (문제가 없으면 테스트 통과)
+        XCTAssertTrue(result.issues.isEmpty, "Accessibility issues found: \(result.issues)")
+
+        // 문제 발견 시 출력
+        for issue in result.issues {
+            print("Accessibility Issue: \(issue.description)")
         }
     }
 
+    func testPerformanceExample() throws {
+        self.measure {
+            // 성능 측정을 위한 코드
+        }
+    }
 }
