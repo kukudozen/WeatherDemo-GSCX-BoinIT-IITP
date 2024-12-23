@@ -34,7 +34,7 @@ jobs:
         xcodebuild -workspace WeatherApp.xcworkspace -scheme WeatherApp -configuration Debug build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
 
     - name: Upload artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: app
         path: build/Debug-iphoneos/WeatherApp.app
