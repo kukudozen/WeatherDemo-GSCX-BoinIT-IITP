@@ -10,35 +10,32 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest  # macOS 환경에서 실행
-
+    runs-on: macos-latest
+    
     steps:
-      # 1. 코드 체크아웃
-      - name: Checkout repository
-        uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.1'
+        
+    - name: Install CocoaPods
+      run: |
+        gem install cocoapods
+        gem install xcpretty
+        
+    - name: Pod Install
+      run: |
+        pod install --verbose
+        
+    - name: Build and Test
+      run: |
+        xcodebuild -workspace WeatherDemo.xcworkspace -scheme WeatherDemo -configuration Debug build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO IPHONEOS_DEPLOYMENT_TARGET=16.0 | xcpretty --color --simple
 
-      # 2. Ruby 및 Cocoapods 설치 (GSCX와 관련된 의존성 설치)
-      - name: Set up Ruby and CocoaPods
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.1  # 루비 버전 설정
-
-      - name: Install CocoaPods dependencies
-        run: |
-          gem install cocoapods
-          pod install
-
-      # 3. GSCX 설정 및 실행 (여기에서 접근성 검사 실행)
-      - name: Run GSCX Accessibility Tests
-        run: |
-          # GSCX Scanner 설치 및 실행 예시
-          # (실제 명령은 GSCX 설치 및 사용법에 맞게 조정 필요)
-          xcodebuild -scheme WeatherDemo -destination 'platform=iOS Simulator,name=iPhone 12' test
-          # GSCX로 접근성 검사 명령 실행
-          # 예시로 GSCX Scanner를 실행하는 코드 추가
-          # 참고: 실제 GSCX 실행 코드와 테스트 환경에 맞게 수정해야 합니다.
-
-      # 4. 테스트 실행 (필요한 테스트 실행)
-      - name: Run Tests
-        run: |
-          xcodebuild -scheme WeatherDemo test
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: app
+        path: build/Debug-iphoneos/WeatherDemo.app
