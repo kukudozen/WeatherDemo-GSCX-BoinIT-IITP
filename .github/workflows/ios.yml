@@ -32,16 +32,20 @@ jobs:
         
     - name: Build and Test
       run: |
-        xcodebuild -workspace WeatherDemo.xcworkspace -scheme WeatherDemo -configuration Debug build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO IPHONEOS_DEPLOYMENT_TARGET=16.0 COMPILER_WARNINGS_AS_ERRORS=NO | xcpretty --color --simple
+        xcodebuild -workspace WeatherDemo.xcworkspace \
+                  -scheme WeatherDemo \
+                  -configuration Debug \
+                  build \
+                  CODE_SIGN_IDENTITY="" \
+                  CODE_SIGNING_REQUIRED=NO \
+                  CODE_SIGNING_ALLOWED=NO \
+                  IPHONEOS_DEPLOYMENT_TARGET=16.0 \
+                  ONLY_ACTIVE_ARCH=YES \
+                  -derivedDataPath ./DerivedData \
+                  | xcpretty --color --simple
 
-    - name: Find build output
-      run: |
-        find $PWD -name "WeatherDemo.app"
-        
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
         name: app
-        path: |
-          $PWD/build/**/*.app
-          $PWD/DerivedData/**/*.app
+        path: DerivedData/Build/Products/Debug-iphoneos/WeatherDemo.app
