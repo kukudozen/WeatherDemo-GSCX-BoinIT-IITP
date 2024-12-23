@@ -29,10 +29,6 @@ jobs:
           pod 'abseil', :modular_headers => true
           
           post_install do |installer|
-            # Create symlinks for abseil headers
-            system('mkdir -p ${PODS_ROOT}/Headers/Public/abseil')
-            system('ln -sf ${PODS_ROOT}/abseil/absl ${PODS_ROOT}/Headers/Public/abseil/absl')
-            
             installer.pods_project.targets.each do |target|
               if target.name == 'GTXiLib'
                 target.build_configurations.each do |config|
@@ -41,7 +37,6 @@ jobs:
                     '${PODS_ROOT}/Headers/Public'
                   ]
                   config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17'
-                  config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
                 end
               end
             end
@@ -51,6 +46,14 @@ jobs:
     - name: Install Dependencies
       run: |
         pod install --verbose
+        
+    - name: Setup Header Links
+      run: |
+        cd Pods
+        mkdir -p Headers/Public/abseil
+        ln -sf ../abseil/absl Headers/Public/abseil/absl
+        pwd
+        ls -la Headers/Public/abseil
         
     - name: Build
       run: |
