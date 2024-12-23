@@ -20,7 +20,7 @@ jobs:
         
     - name: Create Podfile
       run: |
-        echo "platform :ios, '13.0'
+        echo "platform :ios, '15.0'  # iOS 버전을 13.0에서 15.0으로 변경
         target 'WeatherDemo' do
           use_frameworks!
           pod 'GSCXScanner'
