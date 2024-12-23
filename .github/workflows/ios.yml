@@ -35,7 +35,7 @@ jobs:
                      test
           
       - name: Upload test results (optional)
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: test-results
           path: path/to/test-results # 필요에 따라 수정
