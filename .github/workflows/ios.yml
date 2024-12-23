@@ -11,7 +11,7 @@ jobs:
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: '3.1' # 2.7에서 3.1로 변경
+        ruby-version: '3.1'
         
     - name: Install Cocoapods
       run: |
@@ -20,7 +20,7 @@ jobs:
     - name: Create Podfile
       run: |
         echo "platform :ios, '13.0'
-        target 'WeatherApp' do
+        target 'WeatherDemo' do    # WeatherApp에서 WeatherDemo로 변경
           use_frameworks!
           pod 'GSCXScanner'
         end" > Podfile
@@ -31,10 +31,10 @@ jobs:
         
     - name: Build
       run: |
-        xcodebuild -workspace WeatherApp.xcworkspace -scheme WeatherApp -configuration Debug build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+        xcodebuild -workspace WeatherDemo.xcworkspace -scheme WeatherDemo -configuration Debug build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
 
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
         name: app
-        path: build/Debug-iphoneos/WeatherApp.app
+        path: build/Debug-iphoneos/WeatherDemo.app
