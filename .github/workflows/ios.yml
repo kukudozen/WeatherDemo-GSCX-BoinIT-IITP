@@ -26,15 +26,22 @@ jobs:
           use_frameworks!
           
           pod 'GSCXScanner'
-          pod 'abseil', :modular_headers => true
+          pod 'abseil', :modular_headers => true, :inhibit_warnings => true
           
           post_install do |installer|
             installer.pods_project.targets.each do |target|
-              if target.name == 'GTXiLib'
+              if ['GTXiLib'].include?(target.name)
                 target.build_configurations.each do |config|
-                  config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)']
-                  config.build_settings['HEADER_SEARCH_PATHS'] << '${PODS_ROOT}/abseil'
-                  config.build_settings['HEADER_SEARCH_PATHS'] << '${PODS_ROOT}/abseil/absl'
+                  # Use direct header path
+                  config.build_settings['HEADER_SEARCH_PATHS'] = [
+                    '$(inherited)',
+                    '${PODS_ROOT}/**',
+                    '${PODS_ROOT}/Headers/Public/abseil/**'
+                  ]
+                  # Force include path modification
+                  config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)']
+                  config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'ABSL_USES_OLD_HEADER_PATH=1'
+                  
                   config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17'
                 end
               end
@@ -45,6 +52,11 @@ jobs:
     - name: Install Dependencies
       run: |
         pod install --verbose
+        
+    - name: List Paths
+      run: |
+        echo "Checking header locations..."
+        find ${PODS_ROOT} -name "str_cat.h" || true
         
     - name: Build
       run: |
