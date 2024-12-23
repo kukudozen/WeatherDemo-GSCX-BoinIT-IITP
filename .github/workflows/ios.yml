@@ -21,10 +21,23 @@ jobs:
     - name: Create Podfile
       run: |
         echo "platform :ios, '16.0'
+        
+        source 'https://github.com/CocoaPods/Specs.git'
+        
         target 'WeatherDemo' do
           use_frameworks!
+          
           pod 'GSCXScanner'
-          pod 'abseil'
+          
+          pod 'abseil', :modular_headers => true
+          
+          post_install do |installer|
+            installer.pods_project.targets.each do |target|
+              target.build_configurations.each do |config|
+                config.build_settings['HEADER_SEARCH_PATHS'] = '$(inherited) ${PODS_ROOT}/abseil'
+              end
+            end
+          end
         end" > Podfile
         
     - name: Install Dependencies
