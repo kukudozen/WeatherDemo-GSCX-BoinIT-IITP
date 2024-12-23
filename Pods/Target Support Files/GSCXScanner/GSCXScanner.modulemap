@@ -1,0 +1,6 @@
+framework module GSCXScanner {
+  umbrella header "GSCXScanner-umbrella.h"
+
+  export *
+  module * { export * }
+}

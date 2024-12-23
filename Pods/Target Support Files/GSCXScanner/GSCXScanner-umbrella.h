@@ -1,0 +1,82 @@
+#ifdef __OBJC__
+#import <UIKit/UIKit.h>
+#else
+#ifndef FOUNDATION_EXPORT
+#if defined(__cplusplus)
+#define FOUNDATION_EXPORT extern "C"
+#else
+#define FOUNDATION_EXPORT extern
+#endif
+#endif
+#endif
+
+#import "GSCXActivitySourceMonitoring.h"
+#import "GSCXAdjustableAccessibilityElement.h"
+#import "GSCXAnalytics.h"
+#import "GSCXAppActivityMonitor.h"
+#import "GSCXAutoInstaller.h"
+#import "GSCXColoredView.h"
+#import "GSCXContinuousScanner.h"
+#import "GSCXContinuousScannerDelegate.h"
+#import "GSCXContinuousScannerGalleryDetailViewData.h"
+#import "GSCXContinuousScannerGalleryViewController.h"
+#import "GSCXContinuousScannerGridCell.h"
+#import "GSCXContinuousScannerGridViewController.h"
+#import "GSCXContinuousScannerListTabBarItem.h"
+#import "GSCXContinuousScannerListTabBarUtils.h"
+#import "GSCXContinuousScannerListTabBarViewController.h"
+#import "GSCXContinuousScannerListViewController.h"
+#import "GSCXContinuousScannerPeriodicScheduler.h"
+#import "GSCXContinuousScannerResultViewController.h"
+#import "GSCXContinuousScannerScheduling.h"
+#import "GSCXContinuousScannerScreenshotViewController.h"
+#import "GSCXDefaultSharingDelegate.h"
+#import "GSCXHitForwardingView.h"
+#import "GSCXImageNames.h"
+#import "GSCXInstaller.h"
+#import "GSCXInstallerOptions+Internal.h"
+#import "GSCXInstallerOptions.h"
+#import "GSCXMasterScheduler.h"
+#import "GSCXOverlayViewArranger.h"
+#import "GSCXReport.h"
+#import "GSCXReportContext.h"
+#import "GSCXResultsWindowCoordinating.h"
+#import "GSCXRingView.h"
+#import "GSCXRingViewArranger.h"
+#import "GSCXScanner.h"
+#import "GSCXScannerDelegate.h"
+#import "GSCXScannerIssueExpandableTableViewCell.h"
+#import "GSCXScannerIssueExpandableTableViewDelegate.h"
+#import "GSCXScannerIssueExpandableTableViewHeader.h"
+#import "GSCXScannerIssueTableViewRow.h"
+#import "GSCXScannerIssueTableViewSection.h"
+#import "GSCXScannerOverlayViewController.h"
+#import "GSCXScannerOverlayWindow.h"
+#import "GSCXScannerResultCarousel.h"
+#import "GSCXScannerResultCarouselCollectionViewCell.h"
+#import "GSCXScannerResultCarouselView.h"
+#import "GSCXScannerScreenshotViewController.h"
+#import "GSCXScannerSettingsBlockItem.h"
+#import "GSCXScannerSettingsItem.h"
+#import "GSCXScannerSettingsItemConfiguring.h"
+#import "GSCXScannerSettingsTableViewCell.h"
+#import "GSCXScannerSettingsViewController.h"
+#import "GSCXScannerWindowCoordinator+Internal.h"
+#import "GSCXScannerWindowCoordinator.h"
+#import "GSCXScanResultsPageConstants.h"
+#import "GSCXSharingDelegate.h"
+#import "GSCXSwizzledMethodNotifier.h"
+#import "GSCXTouchActivitySource.h"
+#import "GSCXUtils.h"
+#import "GTXElementResultCollection+GSCXReport.h"
+#import "GTXHierarchyResultCollection+GSCXReport.h"
+#import "NSLayoutConstraint+GSCXUtilities.h"
+#import "UIApplication+GSCXSwizzling.h"
+#import "UIView+GSCXAppearance.h"
+#import "UIView+NSLayoutConstraint.h"
+#import "UIViewController+GSCXAppearance.h"
+#import "UIWindow+GSCXScannerAdditions.h"
+
+FOUNDATION_EXPORT double GSCXScannerVersionNumber;
+FOUNDATION_EXPORT const unsigned char GSCXScannerVersionString[];
+
