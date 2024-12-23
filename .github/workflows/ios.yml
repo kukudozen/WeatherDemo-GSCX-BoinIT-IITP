@@ -1,54 +1,43 @@
-name: iOS Build
-on: [push]
+name: macOS Accessibility Tests
+
+on:
+  push:
+    branches:
+      - main # main 브랜치에 푸시될 때마다 실행
+  pull_request:
+    branches:
+      - main # main 브랜치로 풀 리퀘스트가 발생할 때마다 실행
 
 jobs:
-  build:
-    runs-on: macos-latest
-    
-    steps:
-    - uses: actions/checkout@v2
-    
-    - name: Set up Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: '3.1'
-        
-    - name: Install Cocoapods
-      run: |
-        gem install cocoapods
-        gem install xcpretty
-        
-    - name: Create Podfile
-      run: |
-        echo "platform :ios, '16.0'
-        
-        target 'WeatherDemo' do
-          use_frameworks!
-          
-          pod 'GSCXScanner'
-          pod 'abseil', :modular_headers => true
-        end" > Podfile
-        
-    - name: Install Dependencies
-      run: |
-        pod install --verbose
-        
-    - name: Modify GTXiLib Header Include
-      run: |
-        cd Pods/GTXiLib/OOPClasses
-        # Backup original file
-        cp xml_utils.cc xml_utils.cc.backup
-        # Replace include statement
-        sed -i '' 's/#include <abseil\/absl\/strings\/str_cat.h>/#include "absl\/strings\/str_cat.h"/' xml_utils.cc
-        # Show the change
-        diff xml_utils.cc.backup xml_utils.cc || true
-        
-    - name: Build
-      run: |
-        xcodebuild -workspace WeatherDemo.xcworkspace -scheme WeatherDemo -configuration Debug build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO IPHONEOS_DEPLOYMENT_TARGET=16.0 | xcpretty --color --simple
+  test:
+    runs-on: macos-latest  # 최신 MacOS 환경에서 실행
 
-    - name: Upload artifact
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3  # 코드 체크아웃
+
+    - name: Set up Ruby for CocoaPods
+      uses: ruby/setup-ruby@v1  # CocoaPods를 위한 Ruby 환경 설정
+      with:
+        version: 3.1 # 원하는 Ruby 버전 설정
+
+    - name: Install dependencies
+      run: |
+        gem install cocoapods # CocoaPods 설치
+        pod install # CocoaPods을 이용해 의존성 설치
+
+    - name: Set up Xcode
+      run: |
+        sudo xcode-select --switch /Applications/Xcode_14.app/Contents/Developer # Xcode 버전 설정 (원하는 버전으로 변경 가능)
+
+    - name: Run tests
+      run: |
+        xcodebuild -workspace WeatherDemo.xcworkspace -scheme WeatherDemo -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14' test | tee result.log
+        # GSCXScanner와 함께 XCTest 테스트 실행
+        # 'result.log'에 테스트 결과 저장
+
+    - name: Upload test results
       uses: actions/upload-artifact@v3
       with:
-        name: app
-        path: build/Debug-iphoneos/WeatherDemo.app
+        name: test-results
+        path: result.log # 결과 파일 업로드
