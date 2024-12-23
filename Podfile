@@ -14,6 +14,8 @@ target 'WeatherDemo' do
           config.build_settings['LINK_WITH_STANDARD_LIBRARIES'] = 'YES'
           config.build_settings['HEADER_SEARCH_PATHS'] = ['$(inherited)', '${PODS_ROOT}']
           config.build_settings['CLANG_ENABLE_MODULES'] = 'YES'
+          config.build_settings['EXCLUDED_SOURCE_FILE_NAMES'] = ['GTXiLib_vers.o'] # 중복 심볼 제거
+          config.build_settings['OTHER_LDFLAGS'] = '$(inherited) -Xlinker -no_deduplicate'
         end
       end
     end
