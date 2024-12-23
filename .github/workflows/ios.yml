@@ -27,33 +27,21 @@ jobs:
           
           pod 'GSCXScanner'
           pod 'abseil', :modular_headers => true
-          
-          post_install do |installer|
-            installer.pods_project.targets.each do |target|
-              if target.name == 'GTXiLib'
-                target.build_configurations.each do |config|
-                  config.build_settings['HEADER_SEARCH_PATHS'] = [
-                    '$(inherited)',
-                    '${PODS_ROOT}/Headers/Public'
-                  ]
-                  config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17'
-                end
-              end
-            end
-          end
         end" > Podfile
         
     - name: Install Dependencies
       run: |
         pod install --verbose
         
-    - name: Setup Header Links
+    - name: Modify GTXiLib Header Include
       run: |
-        cd Pods
-        mkdir -p Headers/Public/abseil
-        ln -sf ../abseil/absl Headers/Public/abseil/absl
-        pwd
-        ls -la Headers/Public/abseil
+        cd Pods/GTXiLib/OOPClasses
+        # Backup original file
+        cp xml_utils.cc xml_utils.cc.backup
+        # Replace include statement
+        sed -i '' 's/#include <abseil\/absl\/strings\/str_cat.h>/#include "absl\/strings\/str_cat.h"/' xml_utils.cc
+        # Show the change
+        diff xml_utils.cc.backup xml_utils.cc || true
         
     - name: Build
       run: |
