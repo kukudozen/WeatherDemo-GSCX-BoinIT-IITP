@@ -10,19 +10,18 @@ target 'WeatherDemo' do
     installer.pods_project.targets.each do |target|
       if target.name == 'GTXiLib'
         target.build_configurations.each do |config|
-          # 헤더 검색 경로
+          # 핵심 설정만 유지
           config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)']
           config.build_settings['HEADER_SEARCH_PATHS'] << '${PODS_ROOT}'
           
-          # 중복 심볼 해결을 위한 설정
+          # 새로운 접근: 프레임워크 설정 변경
+          config.build_settings['MACH_O_TYPE'] = 'staticlib'
           config.build_settings['DEFINES_MODULE'] = 'NO'
-          config.build_settings['CLANG_ENABLE_MODULE_DEBUGGING'] = 'NO'
-          config.build_settings['LINK_WITH_STANDARD_LIBRARIES'] = 'NO'
-          config.build_settings['OTHER_LDFLAGS'] = '$(inherited) -Xlinker -no_deduplicate -Xlinker -undefined -Xlinker dynamic_lookup'
+          config.build_settings['COMBINE_HIDPI_IMAGES'] = 'NO'
           
-          # 버전 문자열 중복 문제 해결
-          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)']
-          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'GTXiLibVersionString=GTXiLibVersionString_$(CURRENT_PROJECT_VERSION)'
+          # 버전 관련 설정 제거
+          config.build_settings.delete('CURRENT_PROJECT_VERSION')
+          config.build_settings.delete('VERSIONING_SYSTEM')
         end
       end
     end
