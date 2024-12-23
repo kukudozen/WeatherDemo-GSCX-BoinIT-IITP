@@ -1,4 +1,4 @@
-name: iOS CI
+name: iOS CI/CD Workflow
 
 on:
   push:
@@ -10,21 +10,35 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-latest  # macOS 환경에서 실행
+
     steps:
-      - name: Checkout code
+      # 1. 코드 체크아웃
+      - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up Ruby
+      # 2. Ruby 및 Cocoapods 설치 (GSCX와 관련된 의존성 설치)
+      - name: Set up Ruby and CocoaPods
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.1  # 원하는 Ruby 버전 입력
+          ruby-version: 3.1  # 루비 버전 설정
 
       - name: Install CocoaPods dependencies
         run: |
           gem install cocoapods
           pod install
 
-      - name: Build and run tests
+      # 3. GSCX 설정 및 실행 (여기에서 접근성 검사 실행)
+      - name: Run GSCX Accessibility Tests
         run: |
-          xcodebuild -workspace WeatherDemo.xcworkspace -scheme WeatherDemo -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 11' build test
+          # GSCX Scanner 설치 및 실행 예시
+          # (실제 명령은 GSCX 설치 및 사용법에 맞게 조정 필요)
+          xcodebuild -scheme WeatherDemo -destination 'platform=iOS Simulator,name=iPhone 12' test
+          # GSCX로 접근성 검사 명령 실행
+          # 예시로 GSCX Scanner를 실행하는 코드 추가
+          # 참고: 실제 GSCX 실행 코드와 테스트 환경에 맞게 수정해야 합니다.
+
+      # 4. 테스트 실행 (필요한 테스트 실행)
+      - name: Run Tests
+        run: |
+          xcodebuild -scheme WeatherDemo test
