@@ -2,68 +2,60 @@ name: iOS Build
 on: [push]
 
 jobs:
- build:
-   runs-on: macos-latest
-   
-   steps:
-   - uses: actions/checkout@v2
-   
-   - name: Set up Ruby
-     uses: ruby/setup-ruby@v1
-     with:
-       ruby-version: '3.1'
-       
-   - name: Install Cocoapods
-     run: |
-       gem install cocoapods
-       gem install xcpretty
-       
-   - name: Create Podfile
-     run: |
-       echo "platform :ios, '16.0'
-       
-       target 'WeatherDemo' do
-         use_frameworks!
-         
-         pod 'GSCXScanner'
-         pod 'abseil', :modular_headers => true
-         
-         post_install do |installer|
-           installer.pods_project.targets.each do |target|
-             if target.name == 'GTXiLib'
-               target.build_configurations.each do |config|
-                 # Framework 설정 추가
-                 config.build_settings['DEFINES_MODULE'] = 'YES'
-                 config.build_settings['MODULEMAP_FILE'] = '${PODS_ROOT}/Headers/Public/GTXiLib/GTXiLib.modulemap'
-                 
-                 # 헤더 검색 경로 수정
-                 config.build_settings['HEADER_SEARCH_PATHS'] = [
-                   '$(inherited)',
-                   '${PODS_ROOT}/abseil',
-                   '${PODS_ROOT}/Headers/Public/abseil'
-                 ]
-                 
-                 # C++ 표준 설정
-                 config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17'
-                 
-                 # 모듈 맵 설정
-                 config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
-               end
-             end
-           end
-         end
-       end" > Podfile
-       
-   - name: Install Dependencies
-     run: |
-       pod install --verbose
-       
-   - name: Build
-     run: |
-       xcodebuild -workspace WeatherDemo.xcworkspace -scheme WeatherDemo -configuration Debug build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO IPHONEOS_DEPLOYMENT_TARGET=16.0 | xcpretty --color --simple
+  build:
+    runs-on: macos-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.1'
+        
+    - name: Install Cocoapods
+      run: |
+        gem install cocoapods
+        gem install xcpretty
+        
+    - name: Create Podfile
+      run: |
+        echo "platform :ios, '16.0'
+        
+        target 'WeatherDemo' do
+          use_frameworks!
+          
+          pod 'GSCXScanner'
+          pod 'abseil', :modular_headers => true
+          
+          post_install do |installer|
+            installer.pods_project.targets.each do |target|
+              if target.name == 'GTXiLib'
+                target.build_configurations.each do |config|
+                  config.build_settings['DEFINES_MODULE'] = 'YES'
+                  config.build_settings['HEADER_SEARCH_PATHS'] = [
+                    '$(inherited)',
+                    '${PODS_ROOT}/abseil',
+                    '${PODS_ROOT}/Headers/Public/abseil'
+                  ]
+                  config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17'
+                  config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+                end
+              end
+            end
+          end
+        end" > Podfile
+        
+    - name: Install Dependencies
+      run: |
+        pod install --verbose
+        
+    - name: Build
+      run: |
+        xcodebuild -workspace WeatherDemo.xcworkspace -scheme WeatherDemo -configuration Debug build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO IPHONEOS_DEPLOYMENT_TARGET=16.0 | xcpretty --color --simple
 
-   - name: Upload artifact
-     uses: actions/upload-artifact@v3
-     with:
-       name: app
-       path: build/Debug-iphoneos/WeatherDemo.app
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: app
+        path: build/Debug-iphoneos/WeatherDemo.app
