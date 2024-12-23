@@ -16,11 +16,12 @@ jobs:
     - name: Install Cocoapods
       run: |
         gem install cocoapods
+        gem install xcpretty
         
     - name: Create Podfile
       run: |
         echo "platform :ios, '13.0'
-        target 'WeatherDemo' do    # WeatherApp에서 WeatherDemo로 변경
+        target 'WeatherDemo' do
           use_frameworks!
           pod 'GSCXScanner'
         end" > Podfile
@@ -31,7 +32,7 @@ jobs:
         
     - name: Build
       run: |
-        xcodebuild -workspace WeatherDemo.xcworkspace -scheme WeatherDemo -configuration Debug build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+        set -o pipefail && xcodebuild -workspace WeatherDemo.xcworkspace -scheme WeatherDemo -configuration Debug build -verbose CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO | xcpretty --color --simple
 
     - name: Upload artifact
       uses: actions/upload-artifact@v3
