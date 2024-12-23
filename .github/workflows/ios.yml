@@ -24,6 +24,7 @@ jobs:
         target 'WeatherDemo' do
           use_frameworks!
           pod 'GSCXScanner'
+          pod 'abseil'
         end" > Podfile
         
     - name: Install Dependencies
