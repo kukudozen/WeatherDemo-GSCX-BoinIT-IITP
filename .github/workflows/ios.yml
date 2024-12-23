@@ -29,14 +29,16 @@ jobs:
           pod 'abseil', :modular_headers => true
           
           post_install do |installer|
+            # Create symlinks for abseil headers
+            system('mkdir -p ${PODS_ROOT}/Headers/Public/abseil')
+            system('ln -sf ${PODS_ROOT}/abseil/absl ${PODS_ROOT}/Headers/Public/abseil/absl')
+            
             installer.pods_project.targets.each do |target|
               if target.name == 'GTXiLib'
                 target.build_configurations.each do |config|
-                  config.build_settings['DEFINES_MODULE'] = 'YES'
                   config.build_settings['HEADER_SEARCH_PATHS'] = [
                     '$(inherited)',
-                    '${PODS_ROOT}/abseil',
-                    '${PODS_ROOT}/Headers/Public/abseil'
+                    '${PODS_ROOT}/Headers/Public'
                   ]
                   config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17'
                   config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
